@@ -88,6 +88,15 @@ body {
 }
 
 .tiptap {
+  /* Link styles */
+  a {
+    @apply text-blue-600;
+    cursor: pointer;
+
+    &:hover {
+      @apply underline;
+    }
+  }
   /* Image Specific styling */
   img {
     display: block;
@@ -100,7 +109,7 @@ body {
     }
   }
 
-   /* Table-specific styling */
+  /* Table-specific styling */
   table {
     border-collapse: collapse;
     margin: 0;
@@ -130,7 +139,7 @@ body {
 
     .selectedCell:after {
       background: var(#959596);
-      content: '';
+      content: "";
       left: 0;
       right: 0;
       top: 0;
@@ -220,6 +229,107 @@ body {
     }
   }
 
+  /* Custom data-style-driven list marker styles (chosen from toolbar) */
+  /* Ordered lists: support several visual presets with nested level styles */
+  ol[data-style="ordered-decimal"] {
+    list-style-type: decimal;
+  }
+  ol[data-style="ordered-decimal"] ol {
+    list-style-type: lower-alpha;
+  }
+  ol[data-style="ordered-decimal"] ol ol {
+    list-style-type: lower-roman;
+  }
+
+  /* Put parentheses after the marker for the 'ordered-paren' style */
+  ol[data-style="ordered-paren"] {
+    list-style-type: decimal;
+  }
+  ol[data-style="ordered-paren"] > li::marker {
+    content: counter(list-item) ") ";
+  }
+  ol[data-style="ordered-paren"] ol {
+    list-style-type: lower-alpha;
+  }
+  ol[data-style="ordered-paren"] ol ol {
+    list-style-type: lower-roman;
+  }
+
+  /* Nested decimal (1., 1.1., 1.2.1.) approximation */
+  ol[data-style="ordered-nested"] {
+    /* Hierarchical numbering: 1. 1.1. 1.2. 2. 2.1. ... */
+    counter-reset: item;
+    list-style: none;
+    padding-left: 1rem;
+  }
+  /* Ensure nested ol also reset their own 'item' counter so counters() produces
+     parent.child.grandchild numbering. Use a visual fallback via ::before so
+     browsers that don't support generated content in ::marker still show markers. */
+  ol[data-style="ordered-nested"] ol {
+    counter-reset: item;
+  }
+
+  ol[data-style="ordered-nested"] li {
+    display: block;
+    counter-increment: item;
+    position: relative;
+    padding-left: 2.2rem;
+    margin: 0.2rem 0;
+  }
+
+  ol[data-style="ordered-nested"] li::before {
+    content: counters(item, ".") ". ";
+    position: absolute;
+    left: 0;
+    width: 2rem;
+    text-align: right;
+    color: inherit;
+  }
+  ol[data-style="ordered-nested"] ol ol {
+    list-style-type: decimal-leading-zero;
+  }
+
+  ol[data-style="ordered-upper-alpha"] {
+    list-style-type: upper-alpha;
+  }
+  ol[data-style="ordered-upper-alpha"] ol {
+    list-style-type: lower-alpha;
+  }
+  ol[data-style="ordered-upper-alpha"] ol ol {
+    list-style-type: upper-roman;
+  }
+
+  ol[data-style="ordered-roman"] {
+    list-style-type: upper-roman;
+  }
+  ol[data-style="ordered-roman"] ol {
+    list-style-type: upper-alpha;
+  }
+  ol[data-style="ordered-roman"] ol ol {
+    list-style-type: decimal;
+  }
+
+  ol[data-style="ordered-zero"] {
+    list-style-type: decimal-leading-zero;
+  }
+  ol[data-style="ordered-zero"] ol {
+    list-style-type: lower-alpha;
+  }
+  ol[data-style="ordered-zero"] ol ol {
+    list-style-type: lower-roman;
+  }
+
+  /* Bullet variations */
+  ul[data-style="bullet-dot"] {
+    list-style-type: disc;
+  }
+  ul[data-style="bullet-square"] {
+    list-style-type: square;
+  }
+  ul[data-style="bullet-open"] {
+    list-style-type: circle;
+  }
+
   /* Task list specific styles */
   ul[data-type="taskList"] {
     list-style: none;
@@ -249,5 +359,4 @@ body {
       margin: 0;
     }
   }
- 
 }

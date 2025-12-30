@@ -2,6 +2,9 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useEditorStore } from "@/store/use-editor-store";
+import { FontSizeExtension } from "@/extensions/font-size";
+import { LineHeightExtension } from "@/extensions/line-height";
 
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -14,15 +17,21 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import Image from "@tiptap/extension-image";
 import ImageResie from "tiptap-extension-resize-image";
-import { useEditorStore } from "@/store/use-editor-store";
 import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
-import {FontFamily} from "@tiptap/extension-font-family";
+import { FontFamily } from "@tiptap/extension-font-family";
+import { Color } from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import { types } from "util";
+import { Ruler } from "./ruler";
 
 const Editor = () => {
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
+    immediatelyRender: false,
     onCreate({ editor }) {
       setEditor(editor);
     },
@@ -49,7 +58,7 @@ const Editor = () => {
     },
     editorProps: {
       attributes: {
-        style: "padding-left: 32px; padding-right: 56px;",
+        style: "padding-left: 56px; padding-right: 56px;",
         class:
           "tiptap focus:outline-none bg-white border border-[#C7C7C7] min-h-[1054px] w-[816px] pt-10 pr-14 pb-10",
       },
@@ -61,6 +70,21 @@ const Editor = () => {
         orderedList: false,
         listItem: false,
       }),
+      LineHeightExtension.configure({
+        types: ["paragraph", "heading"],
+        defaultLineHeight: "normal",
+      }),
+      FontSizeExtension,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+      }),
+      Color,
+      Highlight.configure({ multicolor: true }),
       FontFamily,
       TextStyle,
       Underline,
@@ -105,6 +129,7 @@ const Editor = () => {
 
   return (
     <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4 min-h-screen">
+      <Ruler />
       <div className="flex justify-center w-full py-4 mx-auto">
         <EditorContent className="tiptap" editor={editor} />
       </div>
